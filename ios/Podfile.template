@@ -1,0 +1,36 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '13.4'
+
+target 'CivicPulseNative' do
+  # React Native dependencies
+  use_react_native!(
+    :path => config[:reactNativePath],
+    # Enables Flipper.
+    #
+    # Note that if you have use_frameworks! enabled, Flipper will not work and
+    # you should disable the next line.
+    :flipper_configuration => FlipperConfiguration.enabled,
+    # An absolute path to your application root.
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
+  )
+
+  # Required for react-native-maps
+  pod 'react-native-maps', :path => '../node_modules/react-native-maps'
+  
+  # Required for Google Maps (if using Google Maps provider)
+  pod 'GoogleMaps'
+  pod 'Google-Maps-iOS-Utils'
+
+  target 'CivicPulseNativeTests' do
+    inherit! :complete
+    # Pods for testing
+  end
+
+  post_install do |installer|
+    react_native_post_install(
+      installer,
+      config[:reactNativePath],
+      :mac_catalyst_enabled => false
+    )
+  end
+end
